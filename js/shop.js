@@ -41,11 +41,20 @@ function buy(id) {
 // Exercise 2
 function cleanCart() {
     cart.length = 0;
+    calculateTotal();
 }
 
 // Exercise 3
 function calculateTotal() {
     // Calculate total price of the cart using the "cartList" array
+    total = 0;
+
+    cart.forEach(product => {
+        total += product.price * product.quantity;
+    });
+    
+    console.log(total);
+    document.getElementById("total_price").innerHTML = total;
 }
 
 // Exercise 4
@@ -68,4 +77,5 @@ function removeFromCart(id) {
 
 function open_modal() {
     printCart();
+    calculateTotal();
 }
