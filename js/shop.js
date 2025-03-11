@@ -50,16 +50,21 @@ function calculateTotal() {
     total = 0;
 
     cart.forEach(product => {
-        total += product.price * product.quantity;
+        total += product.price * product.quantity - (isNaN(product.subtotalWithDiscount) ? 0 : product.subtotalWithDiscount);
     });
-    
-    console.log(total);
+
     document.getElementById("total_price").innerHTML = total;
 }
 
 // Exercise 4
 function applyPromotionsCart() {
     // Apply promotions to each item in the array "cart"
+    const itemsWithPromotion = cart.filter(item => item.offer != undefined);
+    itemsWithPromotion.forEach(product => {
+        if (product.quantity >= product.offer.number) {
+            product.subtotalWithDiscount =  product.price * product.offer.percent/100 * product.quantity;
+        } 
+    });
 }
 
 // Exercise 5
@@ -77,5 +82,6 @@ function removeFromCart(id) {
 
 function open_modal() {
     printCart();
+    applyPromotionsCart();
     calculateTotal();
 }
