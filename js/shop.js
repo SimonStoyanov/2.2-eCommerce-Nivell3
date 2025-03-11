@@ -40,7 +40,11 @@ function buy(id) {
 
 // Exercise 2
 function cleanCart() {
+    cart.filter(product => product.subtotalWithDiscount != undefined).map(product => {
+        delete product.subtotalWithDiscount; // resets previous instances
+    });
     cart.length = 0;
+    document.getElementById("cart_list").replaceChildren();
     calculateTotal();
 }
 
@@ -50,7 +54,7 @@ function calculateTotal() {
     total = 0;
 
     cart.forEach(product => {
-        total += product.price * product.quantity - (isNaN(product.subtotalWithDiscount) ? 0 : product.subtotalWithDiscount);
+        total += product.subtotalWithDiscount == undefined ? product.price * product.quantity : product.subtotalWithDiscount;
     });
 
     document.getElementById("total_price").innerHTML = total;
@@ -62,7 +66,7 @@ function applyPromotionsCart() {
     const itemsWithPromotion = cart.filter(item => item.offer != undefined);
     itemsWithPromotion.forEach(product => {
         if (product.quantity >= product.offer.number) {
-            product.subtotalWithDiscount =  product.price * product.offer.percent/100 * product.quantity;
+            product.subtotalWithDiscount =  parseFloat(Number(product.price * (1 - product.offer.percent/100) * product.quantity).toFixed(2));
         } 
     });
 }
@@ -70,6 +74,25 @@ function applyPromotionsCart() {
 // Exercise 5
 function printCart() {
     // Fill the shopping cart modal manipulating the shopping cart dom
+    const parent = document.getElementById("cart_list");
+
+    parent.replaceChildren();
+
+    cart.forEach(product => {
+        const tr = parent.appendChild(document.createElement('tr'));
+        const productName = tr.appendChild(document.createElement('th'));
+        productName.classList.add('row');
+        productName.innerHTML = product.name;
+        tr.appendChild(document.createElement('td')).innerHTML = product.price;
+        tr.appendChild(document.createElement('td')).innerHTML = product.quantity;
+        
+        const productPriceTotal = product.price * product.quantity;
+        if (product.subtotalWithDiscount == undefined) {
+            tr.appendChild(document.createElement('td')).innerHTML = `$${productPriceTotal}`;
+        } else {
+            tr.appendChild(document.createElement('td')).innerHTML = `$${product.subtotalWithDiscount}`;
+        }
+    });
 }
 
 
@@ -81,7 +104,7 @@ function removeFromCart(id) {
 }
 
 function open_modal() {
-    printCart();
     applyPromotionsCart();
+    printCart();
     calculateTotal();
 }
