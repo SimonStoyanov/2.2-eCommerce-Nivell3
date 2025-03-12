@@ -15,6 +15,7 @@ fetch('js/products.json')
 var cart = [];
 
 var total = 0;
+let count = 0;
 
 // Exercise 1
 function buy(id) {
@@ -31,6 +32,8 @@ function buy(id) {
                 cartItem.quantity++;
             }
 
+            document.getElementById("count_product").innerHTML = ++count;
+
             return;
         }
     });
@@ -44,7 +47,9 @@ function cleanCart() {
         delete product.subtotalWithDiscount; // resets previous instances
     });
     cart.length = 0;
+    count = 0;
     document.getElementById("cart_list").replaceChildren();
+    document.getElementById("count_product").innerHTML = 0;
     calculateTotal();
 }
 
