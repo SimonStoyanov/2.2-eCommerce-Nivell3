@@ -85,8 +85,8 @@ function printCart() {
 
     cart.forEach(product => {
         const tr = parent.appendChild(document.createElement('tr'));
+        tr.classList.add("align-middle");
         const productName = tr.appendChild(document.createElement('th'));
-        productName.classList.add('row');
         productName.innerHTML = product.name;
         tr.appendChild(document.createElement('td')).innerHTML = product.price;
         tr.appendChild(document.createElement('td')).innerHTML = product.quantity;
@@ -97,6 +97,17 @@ function printCart() {
         } else {
             tr.appendChild(document.createElement('td')).innerHTML = `$${product.subtotalWithDiscount}`;
         }
+
+        const tdBtn = tr.appendChild(document.createElement('td'));
+        const removeBtn = tdBtn.appendChild(document.createElement('button'));
+        removeBtn.classList.add("btn", "btn-outline-danger");
+        removeBtn.setAttribute('onclick', `removeFromCart(${product.id})`);
+
+        const removeSvg = removeBtn.appendChild(document.createElement('img'));
+        removeSvg.src = "./images/remove.svg";
+        removeSvg.alt = "remove";
+        removeSvg.style.width = '32px';
+        removeSvg.style.height = '32px';
     });
 }
 
@@ -105,7 +116,24 @@ function printCart() {
 
 // Exercise 7
 function removeFromCart(id) {
+    const productIndex = cart.findIndex(product => product.id === id);
 
+    if (productIndex !== -1) {
+        cart[productIndex].quantity--;
+        document.getElementById("count_product").innerHTML = --count;
+
+        if (cart[productIndex].offer !== undefined && cart[productIndex].quantity < cart[productIndex].offer.number) {
+            delete cart[productIndex].subtotalWithDiscount;
+        }
+
+        if (cart[productIndex].quantity === 0) {
+            cart.splice(productIndex, 1);
+        }
+
+        applyPromotionsCart();
+        printCart();
+        calculateTotal();
+    }
 }
 
 function open_modal() {
