@@ -62,7 +62,7 @@ function calculateTotal() {
         total += product.subtotalWithDiscount == undefined ? product.price * product.quantity : product.subtotalWithDiscount;
     });
 
-    document.getElementById("total_price").innerHTML = total;
+    document.getElementById("total_price").innerHTML = total.toFixed(2);
 }
 
 // Exercise 4
@@ -93,9 +93,9 @@ function printCart() {
         
         const productPriceTotal = product.price * product.quantity;
         if (product.subtotalWithDiscount == undefined) {
-            tr.appendChild(document.createElement('td')).innerHTML = `$${productPriceTotal}`;
+            tr.appendChild(document.createElement('td')).innerHTML = `$${productPriceTotal.toFixed(2)}`;
         } else {
-            tr.appendChild(document.createElement('td')).innerHTML = `$${product.subtotalWithDiscount}`;
+            tr.appendChild(document.createElement('td')).innerHTML = `$${product.subtotalWithDiscount.toFixed(2)}`;
         }
 
         const tdBtn = tr.appendChild(document.createElement('td'));
